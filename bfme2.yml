@@ -1,0 +1,50 @@
+name: The Lord of the Rings - Battle for Middle-Earth II
+game_slug: lord-of-the-rings-battle-for-middle-earth-ii
+version: DVD + Official Patch
+slug: wine-bfme2
+runner: wine
+
+script:
+  files:
+    - patch106:
+        filename: "LotrBfMe2-65542-english.exe"
+        url: https://modding-union.com/php/url.php?id=131
+  game:
+    arch: win32
+    exe: "$GAMEDIR/drive_c/Program Files/Electronic Arts/The Battle for Middle-earth (tm) II/lotrbfme2.exe"
+    prefix: $GAMEDIR
+    version: lutris-ge-6.16-1
+    wine:   
+      dxvk: true
+      esync: true
+      overrides:
+      nvapi,nvapi64: disabled
+  installer:
+    - task:
+        arch: win32
+        name: create_prefix
+        prefix: $GAMEDIR
+    - insert-disc:
+        requires: autorun.exe
+    - task:
+        arch: win32
+        description: Run Installer
+        executable: $DISC/autorun.exe
+        working_dir: $DISC
+        name: wineexec
+        prefix: $GAMEDIR
+    - task:
+        arch: win32
+        description: Installing offical patch 1.06
+        executable: patch106
+        name: wineexec
+        prefix: $GAMEDIR
+    - write_file:
+        file: $GAMEDIR/drive_c/users/$USER/Application Data/My Battle for Middle-earth(tm) II Files/Options.ini
+        content: |
+          AudioLOD = Low
+          HasSeenLogoMovies = yes
+          IdealStaticGameLOD = VeryLow
+          Resolution = 1920 1080
+          StaticGameLOD = VeryLow
+          TimesInGame = 2
